@@ -58,7 +58,7 @@ router.post(
 );
 
 // authenticate a user using POST: /api/auth/login. no login required
-
+// giving user JWT token on successful login
 router.post(
   "/login",
   [
