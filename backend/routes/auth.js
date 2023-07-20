@@ -4,10 +4,15 @@ const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const fetchuser = require("../middleware/fetchuser");
 
+// secret which will be used to sign the JWT
 const JWT_SECRET = "lwkjafld4@3kjfaoiweourowj2392i349u";
 
-//create a user using POST: "/api/auth/createuser". No login required
+// ROUTE - 1: create a user using POST: "/api/auth/createuser". No login required
+
+// Note: hashing the password and generating the JWT token are two different tasks.
+
 router.post(
   "/createuser",
   [
@@ -18,12 +23,14 @@ router.post(
     }),
   ],
   async (req, res) => {
-    // if there are any errors , return bad request and display errors
+    // 1. Checks if email is in a valid email format and name and password are of appropriate length.
+    // if there are any errors (based on the parameters in the above array), return bad request and display errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
     try {
+      // 2. If valid details then checks if a user with the same email already exists are not.
       // check if the user with this email already exists
       let user = await User.findOne({ email: req.body.email });
       if (user) {
@@ -31,9 +38,11 @@ router.post(
           .status(400)
           .json({ error: "Sorry a user with this email already exists" });
       }
+      // 3. creates a new secure salt + hash password for the user.
       const salt = await bcrypt.genSalt(10);
       const secPassword = await bcrypt.hash(req.body.password, salt);
 
+      // 4. saves the user to the database with the new password.
       user = await User.create({
         name: req.body.name,
         email: req.body.email,
@@ -44,8 +53,8 @@ router.post(
           id: user.id,
         },
       };
+      // 5. signs the data of the user (id) using the secret and then return the token created to the user.
       const authToken = jwt.sign(data, JWT_SECRET);
-      // res.json(user);
 
       // using ES6 syntax autos to authToken: authToken
       res.json({ authToken });
@@ -57,7 +66,7 @@ router.post(
   }
 );
 
-// authenticate a user using POST: /api/auth/login. no login required
+// ROUTE - 2: authenticate a user using POST: /api/auth/login. no login required
 // giving user JWT token on successful login
 router.post(
   "/login",
@@ -97,5 +106,18 @@ router.post(
     }
   }
 );
+
+// ROUTE - 3
+
+router.post("/getuser", fetchuser, async (req, res) => {
+  const user = await User.findById(req.user.id, "-password");
+  if (!user) {
+    return res
+      .status(400)
+      .json({ error: "an error has occured please login again" });
+  }
+  console.log(req.user.id);
+  res.json(user);
+});
 
 module.exports = router;
