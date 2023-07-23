@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
-const {Schema} = mongoose;
-
+const { Schema } = mongoose;
 
 const notesSchema = new Schema({
+  // this allows the connection between Notes schema and User schema
+  // it's like the foreign key
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
   title: {
     type: String,
     required: true,
@@ -13,7 +18,7 @@ const notesSchema = new Schema({
   },
   tag: {
     type: String,
-    default:"General",
+    default: "General",
   },
   date: {
     type: Date,
@@ -21,5 +26,4 @@ const notesSchema = new Schema({
   },
 });
 
-
-module.exports = mongoose.model("notes",notesSchema)
+module.exports = mongoose.model("notes", notesSchema);

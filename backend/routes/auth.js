@@ -107,16 +107,15 @@ router.post(
   }
 );
 
-// ROUTE - 3
+// ROUTE - 3: get a user using GET: /api/auth/getuser. login required
 
-router.post("/getuser", fetchuser, async (req, res) => {
+router.get("/getuser", fetchuser, async (req, res) => {
   const user = await User.findById(req.user.id, "-password");
   if (!user) {
     return res
       .status(400)
       .json({ error: "an error has occured please login again" });
   }
-  console.log(req.user.id);
   res.json(user);
 });
 
