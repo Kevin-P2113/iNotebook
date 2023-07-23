@@ -7,14 +7,18 @@ const { body, validationResult } = require("express-validator");
 // ROUTE - 1: get the notes of a user using  GET: /api/notes/fetchallnotes . login required
 
 router.get("/fetchallnotes", fetchuser, async (req, res) => {
+try {
   const notes = await Notes.find({ user: req.user.id });
-  console.log(req.user.id);
   if (!notes) {
     res
       .status(400)
       .json({ error: "some error has occured while fetching ntoes" });
   }
   res.json(notes);
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({message:"internal server error"});
+}
 });
 
 // ROUTE - 2: add a new note POST: /api/notes/addnote . login required
@@ -38,7 +42,7 @@ router.post(
       res.json(savedNote);
     } catch (error) {
       console.log(error);
-      return res.status(400).json({ error: "error has occured" });
+      return res.status(500).json({ error: "internal server error" });
     }
   }
 );
@@ -83,7 +87,7 @@ try {
   res.status(200).json({message:"note was updated successfully",newNote});
 } catch (error) {
   console.log(error);
-  return res.status(500).json({message:"server error"});
+  return res.status(500).json({message:"internal server error"});
 }
 })
 
