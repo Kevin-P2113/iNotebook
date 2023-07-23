@@ -66,26 +66,26 @@ try {
 
 // ROUTE - 4: update an existing note PUT : /api/notes/updatenote/:noteId . login required
 
-// router.put("/updatenote/:noteId",fetchuser,async (req,res)=>{
-// try {
-//   const noteId = req.params.noteId;
-//   const userId = req.user.id;
-//   const oldNote = await Notes.findOne({_id:noteId,user:userId})
-//   if(!oldNote){
-//     return res.status(400).json({message:"Note not found or does not belong to the user"})
-//   }
-//   const {title,description,tag} = req.body;
-//   const newNote = {};
-//   if(title){newNote.title = title};
-//   if(description){newNote.description = description};
-//   if(tag){newNote.tag = tag};
-//   await Notes.findByIdAndUpdate(noteId,newNote);
-//   res.status(200).json({message:"note was updated successfully",newNote});
-// } catch (error) {
-//   console.log(error);
-//   return res.status(500).json({message:"server error"});
-// }
-// })
+router.put("/updatenote/:noteId",fetchuser,async (req,res)=>{
+try {
+  const noteId = req.params.noteId;
+  const userId = req.user.id;
+  const oldNote = await Notes.findOne({_id:noteId,user:userId})
+  if(!oldNote){
+    return res.status(400).json({message:"Note not found or does not belong to the user"})
+  }
+  const {title,description,tag} = req.body;
+  const newNote = {};
+  if(title){newNote.title = title};
+  if(description){newNote.description = description};
+  if(tag){newNote.tag = tag};
+  await Notes.findByIdAndUpdate(noteId,newNote);
+  res.status(200).json({message:"note was updated successfully",newNote});
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({message:"server error"});
+}
+})
 
 module.exports = router;
 // findOne returns the first object that matches the query, returns null if none are found
