@@ -5,10 +5,16 @@ import NoteContext from "../context/notes/NoteContext";
 function AddNote() {
   const context = useContext(NoteContext);
   let { addNote } = context;
-  const [note, setNote] = useState({ title: "", description: "", tags: "" });
+  const [note, setNote] = useState({
+    title: "",
+    description: "",
+    tags: "default",
+  });
   const handleClick = (e) => {
     e.preventDefault();
     addNote(note.title, note.description, note.tags);
+    console.log(note.title);
+    console.log("this is the note title");
   };
   const onChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
@@ -46,16 +52,19 @@ function AddNote() {
               onChange={onChange}
             />
           </div>
-          <div className="mb-3 form-check">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              id="exampleCheck1"
-            />
-            <label className="form-check-label" htmlFor="exampleCheck1">
-              Check me out
+          <div className="mb-3">
+            <label htmlFor="tags" className="form-label">
+              Tags
             </label>
+            <input
+              type="text"
+              className="form-control"
+              id="tags"
+              name="tags"
+              onChange={onChange}
+            />
           </div>
+
           <button
             type="submit"
             className="btn btn-primary"

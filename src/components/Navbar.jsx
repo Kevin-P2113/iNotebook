@@ -4,9 +4,6 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 const Navbar = () => {
   const location = useLocation();
-  useEffect(()=>{
-    console.log(location.pathname);
-  },[location]);
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -28,12 +25,22 @@ const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname=="/"?"active":""}`} to={`/`}>
+                <Link
+                  className={`nav-link ${
+                    location.pathname == "/" ? "active" : ""
+                  }`}
+                  to={`/`}
+                >
                   Home
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname=="/about/"?"active":""}`} to={`/about/`}>
+                <Link
+                  className={`nav-link ${
+                    location.pathname == "/about/" ? "active" : ""
+                  }`}
+                  to={`/about/`}
+                >
                   About
                 </Link>
               </li>

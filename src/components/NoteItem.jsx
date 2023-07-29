@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import NoteContext from "../context/notes/NoteContext";
 
 function NoteItem(props) {
   const { note } = props;
+  const { deleteNote } = useContext(NoteContext);
   return (
     <div className="col-md-4 my-3">
       <div className="card">
@@ -9,7 +11,14 @@ function NoteItem(props) {
           <h5 className="card-title">{note.title}</h5>
           <p className="card-text">{note.description}</p>
           <button className="btn btn-primary">Edit</button>
-          <button className="btn btn-danger mx-2">Delete</button>
+          <button
+            className="btn btn-danger mx-2"
+            onClick={() => {
+              deleteNote(note._id);
+            }}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
