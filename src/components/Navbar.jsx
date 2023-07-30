@@ -2,8 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import AlertContext from "../context/alert/AlertContext";
 const Navbar = () => {
   const location = useLocation();
+  let navigate = useNavigate();
+  let alert = useContext(AlertContext);
+  let { showAlert } = alert;
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    navigate("/login/");
+    showAlert("Logged Out successfully", "success");
+  };
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -28,7 +39,7 @@ const Navbar = () => {
                 <Link
                   className={`nav-link ${
                     location.pathname == "/" ? "active" : ""
-                  }`}
+                  } ${localStorage.getItem("token")?"":"d-none"}`}
                   to={`/`}
                 >
                   Home
@@ -45,14 +56,28 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
-            <form className="d-flex">
-              <Link className="btn btn-primary mx-2" to={"/signup/"} role="button">
-                Sign Up
-              </Link>
-              <Link className="btn btn-primary mx-2" to={"/login/"} role="button">
-                Log in
-              </Link>
-            </form>
+            {localStorage.getItem("token") ? (
+              <button className="btn btn-primary mx-2" onClick={handleLogOut}>
+                Log Out
+              </button>
+            ) : (
+              <form className="d-flex">
+                <Link
+                  className="btn btn-primary mx-1"
+                  to={"/signup/"}
+                  role="button"
+                >
+                  Sign Up
+                </Link>
+                <Link
+                  className="btn btn-primary "
+                  to={"/login/"}
+                  role="button"
+                >
+                  Log in
+                </Link>
+              </form>
+            )}
           </div>
         </div>
       </nav>

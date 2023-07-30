@@ -31,13 +31,11 @@ function Login() {
     }
   };
 
-  console.log(json);
-
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
   return (
-    <>
+    <div className="container my-5" style={{ width: "500px" }}>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
@@ -73,7 +71,7 @@ function Login() {
           Submit
         </button>
       </form>
-    </>
+    </div>
   );
 }
 

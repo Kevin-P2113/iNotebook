@@ -9,10 +9,15 @@ function Signup() {
     name: "",
     email: "",
     password: "",
+    cpassword: "",
   });
   let navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (credentials.password != credentials.cpassword) {
+      showAlert("Passwords don't match", "danger");
+      return;
+    }
     try {
       const response = await fetch(
         "http://localhost:3000/api/auth/createuser",
@@ -47,7 +52,7 @@ function Signup() {
   };
 
   return (
-    <div className="container">
+    <div className="container my-5 " style={{ width: "500px" }}>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
@@ -101,6 +106,7 @@ function Signup() {
             className="form-control"
             id="cpassword"
             name="cpassword"
+            value={credentials.cpassword}
             onChange={onChange}
           />
         </div>
