@@ -36,6 +36,7 @@ function Login() {
   };
   return (
     <div className="container my-5" style={{ width: "500px" }}>
+      <h3>Log in </h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">

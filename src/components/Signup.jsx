@@ -53,6 +53,7 @@ function Signup() {
 
   return (
     <div className="container my-5 " style={{ width: "500px" }}>
+      <h3>Sign Up</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
