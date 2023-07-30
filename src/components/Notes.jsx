@@ -38,7 +38,7 @@ function Notes() {
     refClose.current.click();
   };
   return (
-    <>
+    <div className="container">
       <button
         type="button"
         className="btn btn-primary"
@@ -84,9 +84,11 @@ function Notes() {
                     name="etitle"
                     value={note.etitle}
                     onChange={onChange}
+                    minLength={5}
+                    required
                   />
                   <div id="emailHelp" className="form-text">
-                    add sample text here.
+                    Minimum 5 characters
                   </div>
                 </div>
                 <div className="mb-3">
@@ -100,7 +102,12 @@ function Notes() {
                     name="edescription"
                     value={note.edescription}
                     onChange={onChange}
+                    minLength={5}
+                    required
                   />
+                  <div id="emailHelp" className="form-text">
+                    Minimum 5 characters
+                  </div>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="tags" className="form-label">
@@ -130,6 +137,7 @@ function Notes() {
                 type="button"
                 className="btn btn-primary"
                 onClick={handleClick}
+                disabled={note.etitle.length < 5 || note.edescription.length < 5}
               >
                 Update Note
               </button>
@@ -137,8 +145,11 @@ function Notes() {
           </div>
         </div>
       </div>
+      <h1>Your notes</h1>
       <div className="row">
-        <h1>Your notes</h1>
+        <div className="container">
+          {notes.length === 0 && "No notes to display"}
+        </div>
         {notes.map((note) => {
           return (
             <NoteItem
@@ -149,7 +160,7 @@ function Notes() {
           );
         })}
       </div>
-    </>
+    </div>
   );
 }
 
