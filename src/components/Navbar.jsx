@@ -20,7 +20,7 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
-            Navbar
+            iNotebook
           </a>
           <button
             className="navbar-toggler"
@@ -39,7 +39,7 @@ const Navbar = () => {
                 <Link
                   className={`nav-link ${
                     location.pathname == "/" ? "active" : ""
-                  } ${localStorage.getItem("token")?"":"d-none"}`}
+                  } ${localStorage.getItem("token") ? "" : "d-none"}`}
                   to={`/`}
                 >
                   Home
@@ -69,11 +69,7 @@ const Navbar = () => {
                 >
                   Sign Up
                 </Link>
-                <Link
-                  className="btn btn-primary "
-                  to={"/login/"}
-                  role="button"
-                >
+                <Link className="btn btn-primary " to={"/login/"} role="button">
                   Log in
                 </Link>
               </form>
