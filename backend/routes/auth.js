@@ -8,7 +8,7 @@ const fetchuser = require("../middleware/fetchuser");
 
 // secret which will be used to sign the JWT
 const JWT_SECRET = "lwkjafld4@3kjfaoiweourowj2392i349u";
-
+let success = true;
 // ROUTE - 1: create a user using POST: "/api/auth/createuser". No login required
 
 // Note: hashing the password and generating the JWT token are two different tasks.
@@ -34,9 +34,13 @@ router.post(
       // check if the user with this email already exists
       let user = await User.findOne({ email: req.body.email });
       if (user) {
+        success = false;
         return res
           .status(400)
-          .json({ error: "Sorry a user with this email already exists" });
+          .json({
+            success,
+            error: "Sorry a user with this email already exists",
+          });
       }
       // 3. creates a new secure salt + hash password for the user.
       const salt = await bcrypt.genSalt(10);
@@ -57,7 +61,8 @@ router.post(
       const authToken = jwt.sign(data, JWT_SECRET);
 
       // using ES6 syntax autos to authToken: authToken
-      res.json({ authToken });
+      success = true;
+      res.json({ success, authToken });
     } catch (error) {
       console.log(error.message);
       res.status(500);
@@ -77,14 +82,19 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      success = false;
+      return res.status(400).json({ success, errors: errors.array() });
     }
     try {
       let user = await User.findOne({ email: req.body.email });
       if (!user) {
+        success = false;
         return res
           .status(400)
-          .json({ error: "username/password invalid please try again" });
+          .json({
+            success,
+            error: "username/password invalid please try again",
+          });
       }
       bcrypt.compare(req.body.password, user.password, (err, result) => {
         if (result) {
@@ -94,11 +104,16 @@ router.post(
             },
           };
           const authToken = jwt.sign(payload, JWT_SECRET);
-          return res.status(200).json({ authToken });
+          success = true;
+          return res.status(200).json({ success, authToken });
         } else {
+          success = false;
           return res
             .status(400)
-            .json({ error: "username/password invalid please try again" });
+            .json({
+              success,
+              error: "username/password invalid please try again",
+            });
         }
       });
     } catch (error) {
@@ -112,9 +127,10 @@ router.post(
 router.get("/getuser", fetchuser, async (req, res) => {
   const user = await User.findById(req.user.id, "-password");
   if (!user) {
+    success = false;
     return res
       .status(400)
-      .json({ error: "an error has occured please login again" });
+      .json({ success, error: "an error has occured please login again" });
   }
   res.json(user);
 });

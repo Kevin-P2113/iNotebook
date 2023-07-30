@@ -8,7 +8,9 @@ function Notes() {
   const context = useContext(NoteContext);
   let { notes, setNotes, addNote, getAllNotes, editNote } = context;
   useEffect(() => {
-    getAllNotes();
+    if (localStorage.getItem("token")) {
+      getAllNotes();
+    }
   }, [notes]);
   const [note, setNote] = useState({
     id: "",
@@ -137,7 +139,9 @@ function Notes() {
                 type="button"
                 className="btn btn-primary"
                 onClick={handleClick}
-                disabled={note.etitle.length < 5 || note.edescription.length < 5}
+                disabled={
+                  note.etitle.length < 5 || note.edescription.length < 5
+                }
               >
                 Update Note
               </button>

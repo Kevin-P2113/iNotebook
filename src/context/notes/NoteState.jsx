@@ -1,9 +1,12 @@
 import { useState } from "react";
 import NoteContext from "./NoteContext";
-
+import { useContext } from "react";
+import AlertContext from "../alert/AlertContext";
 const NoteState = (props) => {
   const host = "http://localhost:3000";
   const notesInitial = [];
+  let alert = useContext(AlertContext);
+  let { showAlert } = alert;
   const [notes, setNotes] = useState(notesInitial);
   //fetch all notes
 
@@ -14,7 +17,7 @@ const NoteState = (props) => {
         headers: {
           "Content-Type": "application/json",
           "Auth-Token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIwMzdkNWM5NGRiY2ZmYjYwMDY4In0sImlhdCI6MTY4OTg1NDAwN30.hdRIp0pdRq3bD0QRk93KB39qOBvMI5z8OBLoWunSSCg",
+            localStorage.getItem("token"),
         },
       });
       const json = await response.json();
@@ -31,11 +34,12 @@ const NoteState = (props) => {
       headers: {
         "Content-Type": "application/json",
         "Auth-Token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIwMzdkNWM5NGRiY2ZmYjYwMDY4In0sImlhdCI6MTY4OTg1NDAwN30.hdRIp0pdRq3bD0QRk93KB39qOBvMI5z8OBLoWunSSCg",
+          localStorage.getItem("token"),
       },
       body: JSON.stringify({ title, description, tags }),
     });
     const json = await response.json();
+    showAlert("Note was added successfully", "success");
     console.log(json);
   };
   // Delete a note
@@ -45,14 +49,16 @@ const NoteState = (props) => {
       headers: {
         "Content-Type": "application/json",
         "Auth-Token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIwMzdkNWM5NGRiY2ZmYjYwMDY4In0sImlhdCI6MTY4OTg1NDAwN30.hdRIp0pdRq3bD0QRk93KB39qOBvMI5z8OBLoWunSSCg",
+          localStorage.getItem("token"),
       },
     });
     const json = await response.json();
+    showAlert("Note was deleted successfully", "success");
     console.log(json);
     const newNotes = notes.filter((note) => {
       return note._id != id;
     });
+
     setNotes(newNotes);
   };
   // Edit a note
@@ -64,11 +70,13 @@ const NoteState = (props) => {
         headers: {
           "Content-Type": "application/json",
           "Auth-Token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIwMzdkNWM5NGRiY2ZmYjYwMDY4In0sImlhdCI6MTY4OTg1NDAwN30.hdRIp0pdRq3bD0QRk93KB39qOBvMI5z8OBLoWunSSCg",
+            localStorage.getItem("token"),
         },
         body: JSON.stringify({ title, description, tag }),
       });
       const json = await response.json();
+      showAlert("Note was edited successfully", "success");
+
       console.log(json);
     } catch (error) {
       console.log(error);

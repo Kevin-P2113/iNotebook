@@ -4,15 +4,18 @@ const Notes = require("../models/Notes");
 const fetchuser = require("../middleware/fetchuser");
 const { body, validationResult } = require("express-validator");
 
+
+let success = true;
 // ROUTE - 1: get the notes of a user using  GET: /api/notes/fetchallnotes . login required
 
 router.get("/fetchallnotes", fetchuser, async (req, res) => {
 try {
   const notes = await Notes.find({ user: req.user.id });
   if (!notes) {
+    success = false;
     res
       .status(400)
-      .json({ error: "some error has occured while fetching ntoes" });
+      .json({success, error: "some error has occured while fetching ntoes" });
   }
   res.json(notes);
 } catch (error) {
